@@ -1,0 +1,112 @@
+<!-- tenants/templates - read the configuration file add all layers if ready -->
+{% extends 'base.html' %}
+
+<!-- inject assets for map  -->
+{% block extra_head %}
+
+  {% load static %}
+
+  <!-- inject assets for map if -->
+  {% load leaflet_tags %}
+  {% load geojson_tags %}
+  {% leaflet_css %}
+  {% leaflet_js %}
+  
+  <link rel="stylesheet" type="text/css" href="{% static 'leaflet-plugins/leaflet.fullscreen/Control.FullScreen.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'leaflet-plugins/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.css' %}" />
+  
+  <script type="text/javascript">
+    // needed when making post requests in Django
+    // we'll use this for the ajax requests
+    window.CSRF_TOKEN = "{{ csrf_token }}";
+  </script>
+
+  <style>
+    #mapid {
+      height:490px;
+      width:auto;
+      border: solid 1px white;
+    }
+  </style>
+{% endblock extra_head %}  
+
+{% block content %} 
+  <!-- map display - both session and context are set and exposed here {{request.session.slug}} or {{slug}} -->
+  <div class="container-fluid" id="maps">
+
+    {{slug | json_script:"slug_id"}}
+    {{geoe_url | json_script:"geoe_url_id"}}
+    {{survey_copyright | json_script:"survey_copyright_id"}}
+
+    {{ovlayers_status | json_script:"ovlayers_status_id"}}
+    {{ovlayers_bbox | json_script:"ovlayers_bbox_id"}}
+    {{ov_style | json_script:"ov_style_id"}}
+
+    {{oplayers_status | json_script:"oplayers_status_id"}}
+    {{oplayers_bbox | json_script:"oplayers_bbox_id"}} 
+    {{op_style | json_script:"op_style_id"}}
+
+    <!-- Error: do not use name "map" for the leaflet_map -->
+    {% leaflet_map 'mapid' callback="map_init_basic" settings_overrides='' %}
+       <!-- fitextent=True creatediv=True loadevent=load -->
+  </div>
+  <div>{% include "lsa_messages.html" %}</div>
+{% endblock content %}
+
+{% block bottom-js %}
+  {{ block.supper }}
+  <script>
+    var region_url = '{% url "region" %}';
+    var slug = JSON.parse(document.getElementById('slug_id').textContent);
+    var survey_copyright = JSON.parse(document.getElementById('survey_copyright_id').textContent);     // set in views
+    var ov_status = JSON.parse(document.getElementById('ovlayers_status_id').textContent);       // set in consumer
+    var op_status = JSON.parse(document.getElementById('oplayers_status_id').textContent);       // set in consumer
+    
+    console.log(slug);
+    console.log(survey_copyright);
+    console.log(ov_status);
+    console.log(op_status);
+    
+    if (ov_status==1) {   
+      var geoe_url = JSON.parse(document.getElementById('geoe_url_id').textContent);           // set in tenant views
+      var ov_bbox = JSON.parse(document.getElementById('ovlayers_bbox_id').textContent);       // set in consumer
+      var ov_style = JSON.parse(document.getElementById('ov_style_id').textContent);
+     
+      console.log(geoe_url);
+      console.log(ov_bbox);
+      console.log(ov_style);
+    }
+
+    if (op_status==1) {
+      var geoe_url = JSON.parse(document.getElementById('geoe_url_id').textContent);           // set in tenant views
+      var op_bbox = JSON.parse(document.getElementById('oplayers_bbox_id').textContent);       // set in consumer
+      var op_style = JSON.parse(document.getElementById('op_style_id').textContent);
+
+      console.log(geoe_url);
+      console.log(op_bbox);
+      console.log(op_style);
+    }
+  </script>
+  
+  <!-- script src="{% static 'jquery-3.6.3/dist/jquery.min.js' %}"></script> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+  <script src="{% static 'leaflet-plugins/leaflet-geoserver-request/L.Geoserver.js' %}"></script>
+  <script src="{% static 'leaflet-plugins/leaflet.ajax.min-2.1.0.js' %}"></script>
+  <script src="{% static 'leaflet-plugins/leaflet.fullscreen/Control.FullScreen.js' %}"></script>
+  <script src="{% static 'leaflet-plugins/leaflet-providers/leaflet-providers.js' %}"></script>
+  <script src="{% static 'leaflet-plugins/leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.js' %}"></script>
+  <script src="{% static 'js/process_ovlayers.js' %}"></script>
+  <script src="{% static 'js/process_oplayers.js' %}"></script>
+  <script src="{% static 'js/gisapp.js' %}"></script>
+
+{% endblock bottom-js %}
+
+<!-- Examples -->
+<!-- var compare = "page3";
+
+if( ["page1", "page2"].includes(compare) ) {
+  document.body.innerHTML = "github url";
+} else {
+  document.body.innerHTML = "non-github url";
+} -->

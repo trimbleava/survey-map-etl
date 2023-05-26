@@ -1,0 +1,4 @@
+from django.contrib import admin
+from django_tenants.admin import TenantAdminMixin
+
+from tenants.<new_tenant_slug>.models import *  TODO

@@ -1,0 +1,44 @@
+
+{% extends 'base.html' %}
+{% block title %}Heath LSA ETL{% endblock %}
+{% load static %}
+
+{% block content %}
+  
+  <div class="container-fluid" id="contents">
+    <br>
+    <h3 class="text-center">Welcome to the Survey Map Preparation and GeoServer Readiness</h3>
+    <br>
+    <div class="row">
+      <div class="col-md-6">
+        <p style="text-align: justify;">
+          Heath consultants performs multiple type of surveys, primarily aimed at the utility companies which distribute 
+          cooking and home heating methane / ethane gas to customer residences through underground pipelines.
+          Heath offers two different services to utility companies:
+        </p>
+        <ol>
+          <li style="text-align: justify;">Leak detection equipment (Laser and Infrared based) sales, support, refurbishment, and repairs through its Process Business Unit (PBU)</li>
+          <li style="text-align: justify;">Technicians and crew who can use such equipment and perform survey on ground for leak detection on behalf of the customer through its Service Business Unit (SBU).</li>
+        </ol>
+        <p style="text-align: justify;">
+          To conduct a successful survey the personnel need maps that show various assets like main and service pipeslines, 
+          proposed pipelines, high pressure pipelines, residential addresses, right of way, risers, stubs etc. 
+          overlayed on top of a street or satellite maps. 
+          <br>
+          This interactive application amis at creation such maps (a.k.a pristine map), per customer through its 
+          <kbd>ETL processing engine</kbd>. Authorized internal developers may access the source code at: 
+          <a href="https://heathpbu.visualstudio.com/Heath-LSA-Scripts/_git/Pristine-Map?version=GBsurvey-map-etl">link to the source code</a>.
+          An example map is shown on the right.
+        </p> 
+      </div> <!-- first col -->
+      <div class="col-md-6">
+        <a href="#"> 
+          <img src="{% static 'img/pristine_map_sample.png' %}" class="float-md-end" alt="Heath Survey Mapsheet" 
+            width="90%" height="90%">
+        </a>
+      </div> <!-- 2nd col -->
+    </div>   <!-- row -->
+    <div>{% include "lsa_messages.html" %}</div>
+  </div>     <!-- container -->
+{% endblock %}  
+

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+<!-- inject assets for map  -->
+{% block extra_head %}
+  {% load leaflet_tags %}
+  {% load geojson_tags %}
+  {% leaflet_css %}
+  {% leaflet_js %}
+  {% load static %}
+
+  <style>
+    #mapid{
+      height:490px;
+      width:auto;
+      border: solid 1px white;
+    }
+  </style>
+
+<script type="text/javascript" src="{% static 'js/leaflet.ajax.min_2.1.0.js' %}"></script> 
+<script>
+  // data url
+  var data_endpoint = '{% url "nevada" %}';  
+ 
+  // polygon style
+  var geojsonStyle = {
+    "color": "#ff7800",
+    "weight": 2,
+    "opacity": 0.25
+  };
+
+  // popups
+  var popup = function onEachFeature(feature, layer) {
+    var props = feature.properties;
+    var values = `<h5>${props.name}</h5><p>USPS: ${props.stusps}<br>State Geoid: ${props.geoid}</p>`;
+    layer.bindPopup(values);
+  };
+
+  window.addEventListener("map:init", function (event) {
+    var map = event.detail.map;
+
+    // get layer control from settings file
+    var controlLayers = map.layerscontrol;
+
+    // download GeoJSON data with Ajax
+    fetch(data_endpoint).then(function(resp) {
+      return resp.json();
+    }).then(function(data) {
+      var nevada_layer =  L.geoJson(data, {
+          onEachFeature: function onEachFeature(feature, layer) {
+            var props = feature.properties;
+            var content = `<h5>${props.name}</h5><p>USPS: ${props.stusps}<br>State Geoid: ${props.geoid}</p>`;
+            layer.bindPopup(content);
+          },
+          style: geojsonStyle
+        }).addTo(map);   // end of data
+      controlLayers.addOverlay(nevada_layer, 'Nevada');
+
+    }); // end of then
+  });   // end of event    
+  
+</script>
+{% endblock extra_head %}
+
+{% block content %}
+  <div class="container-fluid" id="maps">      
+    {% leaflet_map 'mapid' %}
+  </div>
+{% endblock content %}

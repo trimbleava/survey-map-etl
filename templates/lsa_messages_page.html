@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container-fluid" id="contents">
+    <br>
+    <h3 class="text-center">{{request.session.title}}</h3>
+    <br>
+    <br>
+    {% include "lsa_messages.html" %}
+    <br>
+    <br>
+    <div class="h-100 d-flex align-items-center justify-content-center">
+      <a href="{% url 'home-public' %}">Back to home</a>
+    </div>
+    <br>
+  </div>     <!-- container -->
+  
+{% endblock %}  

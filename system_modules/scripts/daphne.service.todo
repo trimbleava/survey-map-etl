@@ -1,0 +1,15 @@
+[Unit]
+Description=daphne daemon for lsa chat
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/var/www/html/survey-map-etl/heath_lsa
+ExecStart=/var/www/html/PY_ENV/bin/daphne -b 0.0.0.0 -p 8000 heath_lsa.asgi:application
+
+# Not sure if should use 'on-failure' or 'always'. 
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

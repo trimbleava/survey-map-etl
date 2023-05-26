@@ -1,0 +1,184 @@
+https://techflow360.com/how-to-deploy-django-channels-by-configuring-nginx-to-run-both-gunicorn-and-daphne/
+
+sudo apt install supervisor
+create /etc/supervisor/conf.d/lsa_channels.conf
+
+[fcgi-program:asgi]
+# TCP socket used by Nginx backend upstream
+socket=tcp://localhost:8000
+ 
+# Directory where your site's project files are located
+directory=/var/www/html/survey-map-etl
+ 
+# Each process needs to have a separate socket file, so we use process_num
+command=/var/www/html/PY_ENV/bin/daphne -u /run/daphne/daphne%(process_num)d.sock --fd 0 --access-log - --proxy-headers heath_lsa.asgi:application
+ 
+# Number of processes to startup, roughly the number of CPUs you have
+numprocs=4
+ 
+# Give each process a unique name so they can be told apart
+process_name=lsa-asgi%(process_num)d
+ 
+# Automatically start and recover processes
+autostart=true
+autorestart=true
+# Choose where you want your log to go
+stdout_logfile=/var/log/asgi.log
+redirect_stderr=true
+
+Create the run directory for the sockets referenced in the supervisor configuration file.
+
+1
+$ sudo mkdir /run/daphne/
+If the supervisor fcgi-program is being run under a different user make sure to change the owner settings of the run directory.
+
+1
+$ sudo chown <user>.<group> /run/daphne/
+On every server reboot, the /run/daphne folder will be cleared out. To make it persistent create a file /usr/lib/tmpfiles.d/daphne.conf and add the following in its content:
+
+1
+$ d /run/daphne 0755 <user> <group>
+Make sure the supervisor reread and update itself with the new job:
+
+1
+2
+$ sudo supervisorctl reread
+$ sudo supervisorctl update
+Next, put the following setting in your Nginx Config file:
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+upstream ws_server {
+    server localhost:8000;
+}
+ 
+ 
+server {
+    listen 80;
+    server_name 'mywebsite.com';
+ 
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/saif/django_examples;
+    }
+ # WSGI
+    location / {
+        try_files $uri @proxy_to_app;
+    }
+# ASGI
+    location /ws {
+        try_files $uri @proxy_to_ws;
+    }
+ 
+    location @proxy_to_ws {
+        proxy_pass http://ws_server;
+         
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+ 
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $server_name;
+    }
+ 
+    location @proxy_to_app {
+        include proxy_params;
+        proxy_pass   http://unix:/home/saif/django_examples/django_examples.sock;
+    }
+ 
+}
+Reload Nginx to apply the new changes:
+
+1
+$ sudo service nginx reload
+===========================
+
+sudo apt update
+sudo apt install nginx
+sudo ufw app list
+Available applications:
+  Apache
+  Apache Full
+  Apache Secure
+  Nginx Full
+  Nginx HTTP
+  Nginx HTTPS
+  OpenSSH
+Nginx Full: This profile opens both port 80 (normal, unencrypted web traffic) and port 443 (TLS/SSL encrypted traffic)
+Nginx HTTP: This profile opens only port 80 (normal, unencrypted web traffic)
+Nginx HTTPS: This profile opens only port 443 (TLS/SSL encrypted traffic)
+sudo ufw allow 'Nginx HTTP'
+Rule added
+Rule added (v6)
+sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere
+80/tcp                     ALLOW       Anywhere
+OpenSSH                    ALLOW       Anywhere
+8001/tcp                   ALLOW       Anywhere
+8000/tcp                   ALLOW       Anywhere
+8080/tcp                   ALLOW       Anywhere
+Nginx HTTP                 ALLOW       Anywhere
+22/tcp (v6)                ALLOW       Anywhere (v6)
+80/tcp (v6)                ALLOW       Anywhere (v6)
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+8001/tcp (v6)              ALLOW       Anywhere (v6)
+8000/tcp (v6)              ALLOW       Anywhere (v6)
+8080/tcp (v6)              ALLOW       Anywhere (v6)
+Nginx HTTP (v6)            ALLOW       Anywhere (v6)
+
+systemctl status nginx
+As confirmed by this out, the service has started successfully. However, the best way to test this is to actually request a page from Nginx.
+
+You can access the default Nginx landing page to confirm that the software is running properly by navigating to your server’s IP address. 
+If you do not know your server’s IP address, you can find it by using the icanhazip.com tool, which will give you your public IP address 
+as received from another location on the internet:
+root@vm-ava-linux-scus:/var/www/html/PY_ENV/bin# curl -4 icanhazip.com
+23.98.128.118
+Navigate to `/etc/nginx/sites-available`

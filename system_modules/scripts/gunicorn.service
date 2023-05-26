@@ -1,0 +1,24 @@
+# Create gunicorn service to run the WSGI application (the django app)
+# create this file gunicorn.service also in /etc/systemd/system
+# root@vm-ava-linux-scus:/etc/systemd/system# sudo systemctl start gunicorn.socket
+# root@vm-ava-linux-scus:/etc/systemd/system# sudo systemctl enable gunicorn.socket
+# Created symlink /etc/systemd/system/sockets.target.wants/gunicorn.socket → /etc/systemd/system/gunicorn.socket.
+
+#
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=heathadmin
+Group=www-data
+WorkingDirectory=/var/www/html/survey-map-etl
+ExecStart=/var/www/html/PY-ENV/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          heath_lsa.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<h3 class="text-center">Upload Survey Map Configuration File</h3>
+<br>
+<br>
+<div class="container-fluid" style="min-height: 380px;">
+  <form action="{% url 'save-survey-config' %}" method="post" class="customerForm" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3 row">
+      <div class="col-md-3 col-form-label">
+        <label for="{{ form.description.id_for_label }}" class="form-label">{{form.description.label}}</label>
+      </div>
+      <div class="col-md-9">
+        <input type="text" class="form-control form-control-md" name="{{form.description.html_name}}" 
+              required id="{{form.description.auto_id}}" size="30"
+              placeholder="{{form.description.value}}" aria-label="{{form.description.value}}" 
+              aria-describedby="{{form.description.html_name}}_help">
+        <span class='helptext' id="{{form.description.html_name}}_help" class="form-text">{{form.description.help_text}}</span>
+      </div>
+    </div>
+
+    <div class="mb-3 row">
+      <div class="col-md-3 col-form-label">
+        <label for="{{ form.filename.id_for_label }}" class="form-label">{{form.filename.label}}</label>
+      </div>
+      <div class="col-md-9">
+        <input type="file" class="form-control form-control-md" name="{{form.filename.html_name}}" 
+              required id="{{form.filename.auto_id}}" size="30"
+              placeholder="{{form.filename.value}}" aria-label="{{form.filename.value}}" 
+              aria-describedby="{{form.filename.html_name}}_help">
+        <span class='helptext' id="{{form.filename.html_name}}_help" class="form-text">{{form.filename.help_text}}</span>
+      </div>
+    </div>
+  
+    <div class="text-center">
+      <input type="submit" class="btn btn-primary" value="Upload">
+    </div>
+  </form>
+  <br>
+  {% include "lsa_messages.html" %}
+</div>
+{% endblock %}

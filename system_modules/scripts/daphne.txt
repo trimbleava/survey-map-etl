@@ -1,0 +1,25 @@
+# Deploying Django Channels with Daphne & Systemd
+# Gunicorn/Apache is what we can use to run the WSGI application - which is our django app. 
+# To run the ASGI application we need something else, an additional tool. 
+# **[Daphne](https://github.com/django/daphne)** was built for Django channels and is the simplest. 
+# We can start daphne using a systemd service when the server boots, just like we start gunicorn 
+# and then gunicorn starts the django app.
+
+sudo apt install daphne
+Navigate to `/etc/systemd/system/`
+
+Create `daphne.service`. Notice the port is `8001`. This is what we need to use for our `WebSocket` connections in the templates.
+```
+[Unit]
+Description=WebSocket Daphne Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/django/CodingWithMitchChat/src
+ExecStart=/home/django/CodingWithMitchChat/venv/bin/python /home/django/CodingWithMitchChat/venv/bin/daphne -b 0.0.0.0 -p 8001 CodingWithMitchChat.asgi:application
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

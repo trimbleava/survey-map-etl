@@ -1,0 +1,58 @@
+<!-- read the configuration file add all layers if ready -->
+{% extends 'base.html' %}
+
+<!-- inject assets for map  -->
+{% block extra_head %}
+  {% load leaflet_tags %} 
+  {% load geojson_tags %}
+  {% leaflet_css %}
+  {% leaflet_js %}
+  {% load static %}
+
+  <style>
+    #mapid{
+      height:490px;
+      width:auto;
+      border: solid 1px white;
+    }
+  </style>
+  
+  <script src="{% static 'leaflet-plugins/leaflet-groupedlayercontrol/dist/leafletgroupedlayercontrol.min.js' %}"></script>
+  
+{% endblock extra_head %}
+
+{% block content %}
+
+  <div class="container-fluid" id="maps"> 
+    <!-- Error: do not use name "map" for the leaflet_map -->
+    {% leaflet_map 'mapid' callback="map_init_basic" settings_overrides='' %}
+       <!-- fitextent=True creatediv=True loadevent=load -->
+  </div>
+   
+  <script type="text/javascript">
+    var region_url = '{% url "region" %}';
+    function map_init_basic2 (map, options) {
+        
+        var region_url = '{% url "region" %}';
+
+        // The getJSON() method is used to get JSON data using an AJAX HTTP GET request.
+        $.getJSON(region_url, function (data) {
+            // Use Leaflet API here
+            L.geoJson(data).addTo(map);
+        });
+    }
+  </script>
+  <script type="text/javascript" src="{% static 'js/gisapp.js' %}"></script>
+  
+  {% for message in messages %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ message.tags }}</strong> {{ message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+
+  
+ 
+
+{% endblock %}
+ 

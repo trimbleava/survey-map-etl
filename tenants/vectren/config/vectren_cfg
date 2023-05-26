@@ -1,0 +1,32 @@
+ORGANIZATION_NAME="Vectren"
+ORGANIZATION_EMAIL"gissupportdesk@centerpointenergy.com"    
+ORGANIZATION_ID=11
+PROJECT_ID=1050VECT
+ASSETS=[('Main','Polyline'),
+ ('Service','Polyline'),
+ ('Address','Point'),
+ ('Gridzone','Polygon'),
+ ('Business','Polygon'),
+ ('Proposed','Polyline'),
+ ('Riser','Point'),
+ ('Stub','Polyline'),
+ ('PropertyLine','Polyline'),
+ ('ROWLine','Polyline'),
+ ('MobileHomeParks','Polygon'),
+ ('ControllableFitting','Point'),
+ ('CPTestPoint','Point'),
+ ('GasLeakRepair','Point'),
+ ('GasValve','Point'),
+ ('HouseNbrAnno','Point'),
+ ('NonControllableFitting','Point'),
+ ('RegulatorStation','Point'),
+ ('FOMS_AC_Data','Point'),
+ ('LandbaseText_Addr','Point')]
+ QUERY=
+ LEGEND=
+FILE_LOCATION=
+"https://heathus.sharepoint.com/:f:/s/GISServicesADMINONLY/Evxon-weJhpGjv7nCSvlNUwBoGtg7CxsgwTsgvaJyv9HJw?e=PEZDD8"
+https://heathus.sharepoint.com/:f:/s/GISServicesADMINONLY/Ev8TO6UKdmJDlp0xzy675PoBFZ85AgwvCUn6xmn_GHf8vQ?e=ahAIp9
+
+# Id	OrganisationName ProjectName	OrgType	ProjectId	RegionCode
+# 11	Vectren	    	    NULL	    2	    1050VECT	1	

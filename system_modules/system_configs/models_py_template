@@ -1,0 +1,11 @@
+#
+# This file is called by call_command('ogrinspect', ...) management command.
+# Per new tenant create a models.py file,  an admin.py file, and an app.py file.
+# Per new tenant (i.e. southwestgaslv), create a models.py and the apps.py, and
+# an admin.py (or just use the manage.py startapp ) and add the new client to 
+# the list of tenant apps in settings. 
+# The format of a models.py at initial state should be like below:
+
+# models.py - do not remove these comments
+# 
+from django.contrib.gis.db import models

@@ -1,0 +1,13 @@
+[Unit]
+Description=LSA gunicorn daemon
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/html/survey-map-etl
+
+ExecStart=/var/www/html/PY_ENV/bin/gunicorn --workers 1 --access-logfile -  --bind unix:/var/www/html/survey-map-etl/LOGS/gunicorn.sock heath_lsa.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

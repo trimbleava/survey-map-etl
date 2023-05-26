@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Add Public Customer{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<h3 class="text-center">Add Public Customer</h3>
+<br>
+<div class="container-fluid">
+  <form action="" method="post" class="addCustomerForm form-control-sm">
+    {% csrf_token %}
+
+    <!-- {% for field in form %}  this doesn't look in good format, must be fixed within its model
+      <div class="mb-3 row">
+        <div class="col-md-3 col-form-label">
+          <label for="{{ filed.id_for_label }}" class="form-label">{{field.label}}</label>
+        </div>
+        <div class="col-md-8">
+          {{field}}
+        </div>
+      </div>
+    {% endfor %} -->
+    
+    <div class="mb-2 row">
+      <div class="col-md-3 col-form-label">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Tenant Name:</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control form-control-sm" name="{{form.name.html_name}}" 
+               required id="{{form.name.auto_id}}">
+      </div>
+    </div>
+    <div class="mb-2 row">
+      <div class="col-md-3 col-form-label">
+        <label for="{{ form.schema_name.id_for_label }}" class="form-label">Schema Name:</label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control form-control-sm" name="{{form.schema_name.html_name}}"
+               required id="{{form.schema_name.auto_id">
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <div class="col-md-3 col-form-label">
+        <label for="{{ form.slug.id_for_label }}" class="form-label">{{ form.slug.label }}: </label>
+      </div>
+      <div class="col-md-8">
+        <input type="text" class="form-control form-control-sm" 
+               name="{{form.slug.html_name}}" id="{{form.slug.auto_id}}">
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <div class="col-md-3 col-form-label">
+        <label for="{{ form.owner.id_for_label }}" class="form-label">{{ form.owner.label }}:</label>
+      </div>
+      <div class="col-md-8">
+        <select class="form-select form-select-sm mb-3" name="{{form.owner.html_name}}"
+                required id="{{form.owner.auto_id}}">
+          {% for v, l in form.fields.owner.choices %}
+            <option value="{{ v }}">{{ l }}</option>
+          {% endfor %}   
+        </select>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <div class="col-md-3 col-form-label">
+        <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}:</label>
+      </div>
+      <div class="col-md-8">
+        <textarea name="{{form.description.html_name}}" class="form-control form-control-sm"
+                  required id="{{form.description.auto_id}}" rows="3"></textarea>
+      </div>
+    </div>    
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+<div>{% include "lsa_messages.html" %}</div>
+<br><br>
+{% endblock %}

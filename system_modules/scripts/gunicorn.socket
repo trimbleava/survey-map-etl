@@ -1,0 +1,14 @@
+# Configure systemd to execute gunicorn via a gunicorn.socket file
+# sudo su root
+# navigate to /etc/systemd/system/
+# see gunicorn,service
+#
+{Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+

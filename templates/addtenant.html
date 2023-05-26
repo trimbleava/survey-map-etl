@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Add Customer{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<br>
+<h3 class="text-center">Add Customer</h3>
+<br>
+<div class="container-fluid">
+  <form action="" method="post" class="addCustomerForm">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+      <div class="mb-3 row">
+        <div class="col-md-3 col-form-label">
+          <label for="{{ field.id_for_label }}" class="form-label">{{field.label}}</label>
+        </div>
+        <div class="col-md-9">
+          <input type="{{field.type}}" class="form-control form-control-md" name="{{field.html_name}}" 
+                required id="{{field.auto_id}}" size="30"
+                placeholder="{{field.value}}" aria-label="{{field.value}}" 
+                aria-describedby="{{field.html_name}}_help">
+          <span class='helptext' id="{{field.html_name}}_help" class="form-text">{{field.help_text}}</span>
+        </div>
+      </div>
+    {% endfor %}
+    <div class="text-center">
+      <input type="submit" class="btn btn-primary" value="Submit">
+    </div>
+  </form>
+</div>
+<div>{% include "lsa_messages.html" %}</div>
+<br><br>
+{% endblock %}    
+ 

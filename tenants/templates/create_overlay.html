@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid text-center bg-image-matrix">
+  <h3 class="text-center" style="color: white;">Creating Overlay Map for <span id="active-color">"{{request.tenant.name}}"</span>, Please wait ....</h3>
+  <br>
+  <textarea id="create-map-log" cols="150" rows="17" class="border border-2"> </textarea><br>
+  {% include "lsa_messages.html" %}
+</div>  
+{% endblock %} 
+
+<!-- + window.location.host -->
+{% block bottom-js %}
+  <script type="text/javascript">
+   console.log("Websocket connection ....");
+
+    var ws_path = 'ws://' + window.location.host + '/ws/ov/'; 
+    var chatSocket = new WebSocket(ws_path);	  
+
+    chatSocket.onmessage = function(e) {
+        console.log(e);
+        var data = JSON.parse(e.data);
+        document.querySelector('#create-map-log').value += (data.message + '\n');
+    };
+
+    chatSocket.onclose = function(e) {
+        console.log(e);
+        console.error('Chat socket closed unexpectedly');
+    };
+
+  </script>
+{% endblock %}

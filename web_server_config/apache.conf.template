@@ -1,0 +1,56 @@
+# must be outside of virtual host
+WSGISocketPrefix /var/run/wsgi
+<Directory /var/www/html/visual_ux>
+    Require all granted
+</Directory>
+
+# example from django_tenant doc
+<VirtualHost 127.0.0.1:8080>
+    ServerName mywebsite.com
+    ServerAlias *.mywebsite.com mywebsite.com
+    WSGIScriptAlias / "/path/to/django/scripts/mywebsite.wsgi"
+</VirtualHost>
+
+<VirtualHost *:80>
+     DocumentRoot "/var/www/html/visual_ux"
+     ServerAdmin beheenmt@gmail.com
+     ServerName 35.193.244.81
+     # if regiter domain(visual.com = 35.193.244.81, add A record for both visual.com and www.visual.com for this to work in real deployment DNS)
+     ServerAlias www.visual.com
+     Alias /robots.txt  /var/www/html/visual_ux/static/robots.txt
+     Alias /favicon.ico /var/www/html/visual_ux/static/img/favicon.ico
+     #Alias /static/ /var/www/html/visual_ux/static
+     #Alias /media/  /var/www/html/visual_ux/media
+     ErrorLog  "/var/log/httpd/visual_error.log"
+     CustomLog "/var/log/httpd/visual_access.log" combined
+     <Directory /var/www/html/visual_ux>
+        Options +Indexes
+        Order allow,deny
+        Allow from all
+     </Directory>
+     # Serving static files from this directory
+     <Directory /var/www/html/visual_ux/static>
+        Options -Indexes
+        Order deny,allow
+        Require all granted
+     </Directory>
+     # Serving media files from this directory
+     <Directory /var/www/html/visual_ux/media>
+        Options -Indexes
+        Order deny,allow
+        Require all granted
+     </Directory>
+     WSGIDaemonProcess visual_ux processes=2 threads=15 display-name=%{GROP} python-path=/var/www/html/visualEnv:/var/www/html/visual_ux
+     WSGIProcessGroup visual_ux
+     WSGIApplicationGroup %{GLOBAL}
+     <Directory /var/www/html/visualEnv>
+        AllowOverride None
+        Options None
+        Require all granted
+     </Directory>
+     WSGIScriptAlias /visual /var/www/html/visual_ux/visual/visual/wsgi.py
+     <Directory /var/www/html/visual_ux/visual/visual>
+        Order allow,deny
+        Allow from all
+     </Directory>
+</VirtualHost>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en"> <![endif]-->
+<html class="no-js" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- load library tags -->
+    {% load static %}
+    {% load tags_extra %} 
+
+    <script src="{% static 'jquery-3.6.3/dist/jquery.min.js' %}"></script>
+    <link href="{% static 'bootstrap-5.0.2/dist/css/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="{% static 'popperjs-2.11.6/core/dist/umd/popper.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'bootstrap-5.0.2/dist/js/bootstrap.min.js' %}"></script>
+    
+    <!-- application js/css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/lsa_style.css' %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}" />
+
+    <!-- jquery and ui Js CDN -->
+    
+    {% block extra_head %}{% endblock extra_head %}
+
+    <!-- extended script -->
+
+    <!-- <script type="text/javascript">
+      // needed when making post requests in Django
+      // we'll use this for the ajax requests
+      window.CSRF_TOKEN = "{{ csrf_token }}";
+    </script> -->
+
+    <title>{% block title %}{{ request.tenant.name }}{% endblock title %}</title>
+</head>
+
+<body>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+         
+          <!-- brand -->
+          {% block navbar-brand %}
+          <a class="navbar-brand" href="#">
+            <div class="verticaltext">
+              <h4 class="verticaltext_content">Heath Map</h4>
+              <img src="{% static 'img/etl.png' %}" alt="Heath Survey Map" width="50" height="50" 
+                   class="d-inline-block align-text-top">
+            </div>
+          </a>
+          {% endblock navbar-brand %}
+
+          <!-- Toggle button -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerId" 
+                  aria-controls="navbarTogglerId" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+          </button>
+     
+          <!-- collapse items -->
+          <div class="collapse navbar-collapse" id="navbarTogglerId">
+              
+            <!-- menu items in the middle mb = margin-bottom spacing-->
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    
+              <li class="nav-item">
+                <a class="nav-link {% navactive request 'home-public' %}" aria-current="page" href="{% url 'home-public' %}">Home</a>
+              </li>
+    
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Customer
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  {% if request.tenant.schema_name == "public" and request.tenant %}
+                    <li><a class="dropdown-item {% navactive request 'add-customer' %}" href="{% url 'add-customer' %}">Add a Customer</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Remove a Customer</a></li>
+                  {% elif request.tenant.schema_name != "public" and request.tenant %}
+                    <li><a class="dropdown-item" href="#">Add Users</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Remove Users</a></li>   
+		              {% else %}
+                    <li><a class="dropdown-item {% navactive request 'add-public-customer' %}" href="{% url 'add-public-customer' %}">Add Public Customer</a></li>
+                  {% endif %}
+                </ul>
+              </li>
+   
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                  Survey
+                </a>
+
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  {% if request.tenant.schema_name != "public" and request.tenant %}
+                  <li><a class="dropdown-item" href="#">Configure Survey</a></li>
+                  <li><a class="dropdown-item {% navactive request 'create-surveymap' %}" href="{% url 'create-surveymap' %}">Create Survey Map</a></li>
+                  <li><a class="dropdown-item {% navactive request 'create-overlay' %}" href="{% url 'create-overlay' %}">Create Overlay Map</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item {% navactive request 'create-ovlegend' %}" href="{% url 'create-ovlegend' %}">Update Overlay Legends</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item {% navactive request 'delete-overlay' %}" href="{% url 'delete-overlay' %}">Delete Overlay Map</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item {% navactive request 'display-surveymap' %}" href="{% url 'display-surveymap' %}">Display Survey Map</a></li>
+                  {% endif %}  
+                </ul>
+              </li>
+    
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Database
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  {% if request.tenant.schema_name != "public" and request.tenant %}
+                  <li><a class="dropdown-item" href="#">Update Asset Types</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item {% navactive request 'save-survey-config' %}" 
+                        data-bs-toggle="tooltip" data-bs-placement="top" 
+                        title="Save survey map cofiguration file into database for viewing at a later time"
+                        href="{% url 'save-survey-config' %}">Save Config File</a>
+                  </li>
+                  {% elif request.tenant.schema_name == "public" and request.tenant %}
+                  <li><a class="dropdown-item" 
+                         data-bs-toggle="tooltip" data-bs-placement="top" 
+                         title="systemwide dataset used to delineate targeted boundaries"
+                         href="{% url 'load-national-bounds-data' %}">Load Nation Boundary Data</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  {% endif %}
+                </ul>
+              </li>
+    
+              <li class="divider"></li>
+              <!-- user -->
+              <li class="nav-item"><a class="nav-link {% navactive request 'login' %}" href="{% url 'login' %}"> Login </a></li>
+              <!-- logout button -->
+              <li class="nav-item"><a class="nav-link {% navactive request 'logout' %}" href="{% url 'logout' %}"> Logout </a></li>
+            </ul>
+           
+            <!-- form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> -->
+          </div>   <!-- collapse -->    
+        </div>     <!-- container -->
+    </nav>
+    
+    <!-- ********** -->
+    {% block content %}{% endblock content %}   
+
+    <!-- ********** -->
+    {% block nav-bottom %}
+    <nav class="navbar static navbar-dark bg-dark">   <!-- fixed-bottom| static -->
+        <div id="footer" class="container-fluid">
+          <p style="float: left; color: #FFF;">Current Customer:
+            {% if request.tenant %}
+	            <a href="http://{{ request.tenant.get_primary_domain.domain }}:8000">{{ request.tenant.name }}</a>
+              <!-- (<code>{{ request.tenant.schema_name }}</code>, <code>{{ request.tenant.get_primary_domain.domain }}</code>) -->
+            {% else %}
+              None
+              {% url 'add-public-customer' as the_url %}
+              {% if the_url %}
+                <a href="{{ the_url }}" id="active-color">Please add public customer</a>
+              {% endif %}
+            {% endif %}
+            <!--  -->
+            {% if request.tenant.schema_name == "public" %}
+              &nbsp; &nbsp; &nbsp; &nbsp; Available customers:
+              {% for tenant in tenants_list %}
+	              <a href="http://{{ tenant.get_primary_domain.domain }}:8000">{{ tenant.name }}</a> &middot; 
+              {% endfor %}
+            {% endif %}
+          </p>
+          <!-- ********** -->
+          {% block nav-bottom-right %}
+          <p style="float: right; color: white;">
+            Copyright &copy;2023 All Rights Reserved - Heath Consultants 
+          </p>
+          {% endblock nav-bottom-right %}
+          <!-- ********** -->
+        </div> <!-- end of footer -->
+    </nav>     <!-- end of bottom-nav -->
+    {% endblock nav-bottom %}
+    
+    <!-- ********** -->
+    {% block bottom-js %}{% endblock bottom-js %}
+</body>
+</html>

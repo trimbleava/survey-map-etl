@@ -1,0 +1,15 @@
+[Unit]
+Description=Coding with Mitch gunicorn socket
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/html/Codingwithmitch-Chat-master
+
+ExecStart=/var/www/html/Codingwithmitch-Chat-master/env/bin/gunicorn --workers 1 --access-logfile -  --bind unix:/var/www/html/Codingwithmitch-Chat-master/logs/gunicorn.sock ChatServerPlayground.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+~
+

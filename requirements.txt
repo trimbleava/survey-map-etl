@@ -1,0 +1,60 @@
+# must install this for gis
+# pip install D:\Archive\GDAL-3.4.3-cp310-cp310-win_amd64.whl
+# set GDAL_LIBRARY_PATH ... see dev_settings
+# Linux:
+##!/usr/bin/env bash
+#
+#sudo apt-get install python3.10-dev
+#sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
+#sudo apt-get update
+#sudo apt-get install gdal-bin
+#sudo apt-get install libgdal-dev
+#export CPLUS_INCLUDE_PATH=/usr/include/gdal
+#export C_INCLUDE_PATH=/usr/include/gdal
+# gdal-config --version
+# pip install GDAL==3.4.3
+GDAL==3.4.3
+#
+# pythonx.x pythonx.x-venv
+httpie		# testing request on cmd line
+
+# for multi-tenency
+Django==4.1.5
+django-tenants==3.4.7
+django-tenant-users==1.1.1
+django-mptt==0.14.0
+django-leaflet==0.28.3
+django-geojson==4.0.0
+django-crispy-forms==1.14.0
+django_compressor==4.3.1
+#
+# pymemcache==4.0.0
+django-redis==5.2.0
+#
+channels==4.0.0
+channels-redis==4.1.0
+daphne==4.0.0
+gunicorn==20.1.* 
+#
+# database drivers
+psycopg2==2.9.5 
+pyodbc==4.0.35
+#
+pandas==1.5.3
+geopandas==0.12.2
+SQLAlchemy==1.4.46         # downgrade until error on "captial FC" is fixed with pandas 1.xxx  
+# sqlalchemy==2.0.3        # -cp310
+geoalchemy2==0.13.1        # -py3, requires alchemy > 1.4, to_postgis() requires geoalchemy2 package
+fiona==1.9
+jsonfield==3.1.0
+#
+python-dotenv==0.21.0
+random_word==1.0.11
+matplotlib==3.6.3          # -cp310 python version dependent
+bs4==0.0.1                 # beautiful soap
+lxml==4.9.2                # xml parser
+httplib2==0.21.0
+chardet==5.1.0             # The Universal Character Encoding Detector
+#
+# requires geos > 3.10.0  for geojson packaging
+geoserver-rest==2.4.1      # python 2,3 dependent

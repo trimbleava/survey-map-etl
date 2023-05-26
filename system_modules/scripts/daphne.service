@@ -1,0 +1,16 @@
+# Create `daphne.service`. Notice the port is `8001`. 
+# This is what we need to use for our `WebSocket` connections in the templates.
+
+[Unit]
+Description=WebSocket Daphne Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/var/www/html/survey-map-etl
+ExecStart=/var/www/html/PY_ENV/bin/python /var/www/html/PY_ENV/bin/daphne -b 0.0.0.0 -p 8001 heath_lsa.asgi:application
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

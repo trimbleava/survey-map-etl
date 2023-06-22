@@ -1,4 +1,4 @@
-name: GeoDjango CI
+name: Leak Survey Mapping CI/CD
 
 on:
   push:
@@ -7,26 +7,13 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build-vm:
     # spin up Ubuntu version 22.04
     runs-on: ubuntu-22.04
-    strategy:
-      # run in 4 parallel thread, I think
-      # max-parallel: 4
-      matrix:
-        # install python version 3.10
-        python-version: [3.10.6]
-
+    defaults:
+      run:
+        shell: bash
+        working-directory: scripts
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run Tests
-      run: |
-        python manage.py test
+    

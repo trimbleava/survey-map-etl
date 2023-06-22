@@ -19,5 +19,5 @@ jobs:
           MY_WORK_DIR=${{ github.workspace }}
           echo "MY_WORK_DIR=$MY_WORK_DIR" >> $GITHUB_ENV
       - run: |
-          echo $MY_WORK_DIR
+          echo $MY_WORK_DIR/system_modules/scriots/install_redis.sh
     

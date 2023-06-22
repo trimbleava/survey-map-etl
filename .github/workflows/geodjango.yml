@@ -12,12 +12,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       # Selects an action to run as part of a step in your job. An action is a reusable unit of code.
-      - uses: actions/checkout@v3   
-      - run: |
-          echo ${{ github.workspace }}
-
-          MY_WORK_DIR=${{ github.workspace }}
-          echo "MY_WORK_DIR=$MY_WORK_DIR" >> $GITHUB_ENV
-      - run: |
-          echo $MY_WORK_DIR/system_modules/scriots/install_redis.sh
+      - uses: actions/checkout@v3  
+      - name: Install Redis Cache
+        run: $MY_WORK_DIR/system_modules/scriots/install_redis.sh
+        shell: bash    
     

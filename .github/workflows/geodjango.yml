@@ -7,12 +7,12 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build-vm:
+  build:
     # spin up Ubuntu version 22.04
     runs-on: ubuntu-22.04
     steps:
       # Selects an action to run as part of a step in your job. An action is a reusable unit of code.
-      - uses: actions/checkout@v3  
-      - name: Install Redis Cache
-        run: bash ${GITHUB_WORKSPACE}/system_modules/scripts/install_redis.sh
+      - uses: actions/checkout@v3 
+      - name: Survey Map Workflow Script
+        run: bash ${GITHUB_WORKSPACE}/system_modules/scripts/survey_map_workflow.sh
     

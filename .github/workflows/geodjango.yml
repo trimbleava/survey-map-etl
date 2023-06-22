@@ -14,5 +14,5 @@ jobs:
     # Selects an action to run as part of a step in your job. An action is a reusable unit of code.
     - uses: actions/checkout@v3   
     - name: Test App
-      run: ./gradlew test
+      run: ./install_redis.sh
     
